@@ -198,29 +198,31 @@ export default function PDP() {
 
             {/* CTA Buttons */}
             <div className="space-y-3 pt-4 border-t border-warm-border">
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => addToCart(product, 1, selectedSize, selectedMetal)}
                   className="flex-1 bg-charcoal text-ivory text-xs font-semibold uppercase tracking-widest py-4 hover:bg-gold transition-colors flex items-center justify-center gap-2 shadow-luxury"
                 >
                   <ShoppingBag className="w-4 h-4" /> Add to Bag
                 </button>
-                <button
-                  onClick={() => {
-                    addToCart(product, 1, selectedSize, selectedMetal);
-                    navigate('/checkout');
-                  }}
-                  className="bg-gold text-white text-xs font-semibold uppercase tracking-widest px-6 py-4 hover:bg-gold-dark transition-colors"
-                >
-                  Buy Now
-                </button>
-                <button
-                  onClick={() => toggleWishlist(product)}
-                  className="p-4 border border-warm-border hover:border-gold transition-colors"
-                  aria-label="Wishlist"
-                >
-                  <Heart className={`w-5 h-5 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-charcoal'}`} />
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      addToCart(product, 1, selectedSize, selectedMetal);
+                      navigate('/checkout');
+                    }}
+                    className="flex-1 sm:flex-none bg-gold text-white text-xs font-semibold uppercase tracking-widest px-6 py-4 hover:bg-gold-dark transition-colors text-center"
+                  >
+                    Buy Now
+                  </button>
+                  <button
+                    onClick={() => toggleWishlist(product)}
+                    className="p-4 border border-warm-border hover:border-gold transition-colors flex items-center justify-center"
+                    aria-label="Wishlist"
+                  >
+                    <Heart className={`w-5 h-5 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-charcoal'}`} />
+                  </button>
+                </div>
               </div>
 
               {/* Guarantees List */}

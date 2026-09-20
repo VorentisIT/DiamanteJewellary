@@ -134,16 +134,16 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-charcoal text-ivory flex flex-col font-sans">
       
       {/* Admin Top Navbar */}
-      <header className="bg-charcoal-deep border-b border-charcoal-light py-4 px-6 flex justify-between items-center">
+      <header className="bg-charcoal-deep border-b border-charcoal-light py-4 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <Link to="/" className="font-serif text-xl font-bold tracking-widest text-ivory">
             AURÉLIA <span className="text-gold text-xs uppercase font-sans tracking-widest">ADMIN PORTAL</span>
           </Link>
         </div>
-        <div className="flex items-center gap-4 text-xs">
+        <div className="flex flex-wrap items-center gap-3 text-xs">
           <span className="text-warm-gray">Logged in as: <strong className="text-gold">{user?.email || 'admin@gmail.com'}</strong></span>
           <Link to="/" className="text-ivory hover:text-gold border border-charcoal-light px-3 py-1.5">
-            View Live Boutique →
+            View Boutique →
           </Link>
           <button
             onClick={() => {
@@ -158,22 +158,22 @@ export default function AdminDashboard() {
       </header>
 
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         
         {/* Admin Sidebar Navigation */}
-        <aside className="w-64 bg-charcoal-deep border-r border-charcoal-light p-6 space-y-2 flex-shrink-0">
+        <aside className="w-full md:w-64 bg-charcoal-deep border-b md:border-b-0 md:border-r border-charcoal-light p-4 md:p-6 flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto flex-shrink-0">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`w-full flex items-center gap-3 p-3 text-xs font-semibold uppercase tracking-widest text-left rounded ${
+            className={`flex-1 md:w-full flex items-center justify-center md:justify-start gap-2 md:gap-3 p-2.5 md:p-3 text-[11px] md:text-xs font-semibold uppercase tracking-widest text-left rounded whitespace-nowrap ${
               activeTab === 'overview' ? 'bg-gold text-charcoal' : 'text-warm-gray hover:text-ivory'
             }`}
           >
-            <BarChart2 className="w-4 h-4" /> Revenue Overview
+            <BarChart2 className="w-4 h-4" /> Overview
           </button>
 
           <button
             onClick={() => setActiveTab('products')}
-            className={`w-full flex items-center gap-3 p-3 text-xs font-semibold uppercase tracking-widest text-left rounded ${
+            className={`flex-1 md:w-full flex items-center justify-center md:justify-start gap-2 md:gap-3 p-2.5 md:p-3 text-[11px] md:text-xs font-semibold uppercase tracking-widest text-left rounded whitespace-nowrap ${
               activeTab === 'products' ? 'bg-gold text-charcoal' : 'text-warm-gray hover:text-ivory'
             }`}
           >

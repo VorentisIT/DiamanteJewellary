@@ -166,6 +166,91 @@ export default function Navbar() {
           </form>
         </div>
       )}
+
+      {/* Mobile Menu Drawer */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-[#202522]/60 backdrop-blur-sm lg:hidden flex justify-start animate-fadeIn">
+          <div className="bg-[#F8F5EE] w-4/5 max-w-xs h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto">
+            <div>
+              <div className="flex justify-between items-center pb-4 border-b border-[#DED8CC] mb-6">
+                <div>
+                  <span className="font-serif text-xl font-bold tracking-[0.2em] text-[#202522] uppercase block">
+                    AURÉLIA
+                  </span>
+                  <span className="text-[8px] font-semibold tracking-[0.35em] text-[#C49A5A] uppercase block -mt-1">
+                    FINE JEWELLERY
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-1 text-[#202522] hover:text-[#C49A5A]"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Mobile Navigation Links */}
+              <nav className="space-y-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#202522]">
+                <Link
+                  to="/jewellery?newArrival=true"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-2 border-b border-[#DED8CC]/60 hover:text-[#C49A5A]"
+                >
+                  NEW ARRIVALS
+                </Link>
+
+                <div className="py-2 border-b border-[#DED8CC]/60 space-y-2">
+                  <span className="text-[#C49A5A] text-[10px] font-bold tracking-widest block uppercase">
+                    JEWELLERY CATEGORIES
+                  </span>
+                  <div className="grid grid-cols-2 gap-2 text-xs normal-case text-[#77736B] pl-2">
+                    <Link to="/jewellery/rings" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#C49A5A]">Rings</Link>
+                    <Link to="/jewellery/necklaces" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#C49A5A]">Necklaces</Link>
+                    <Link to="/jewellery/earrings" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#C49A5A]">Earrings</Link>
+                    <Link to="/jewellery/bracelets" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#C49A5A]">Bracelets</Link>
+                    <Link to="/jewellery?category=Bridal" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#C49A5A]">Bridal</Link>
+                    <Link to="/jewellery?category=Men's" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#C49A5A]">Men's</Link>
+                  </div>
+                </div>
+
+                <Link
+                  to="/jewellery?collection=The Bridal Edit"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-2 border-b border-[#DED8CC]/60 hover:text-[#C49A5A]"
+                >
+                  COLLECTIONS
+                </Link>
+                <Link
+                  to="/jewellery?category=Gift"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-2 border-b border-[#DED8CC]/60 hover:text-[#C49A5A]"
+                >
+                  GIFTS
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-2 border-b border-[#DED8CC]/60 hover:text-[#C49A5A]"
+                >
+                  ABOUT AURÉLIA
+                </Link>
+              </nav>
+            </div>
+
+            {/* Mobile Footer Links */}
+            <div className="pt-6 border-t border-[#DED8CC] space-y-3">
+              <Link
+                to={user ? (user.role === 'admin' ? '/admin' : '/account') : '/login'}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full bg-[#102C24] text-[#F8F5EE] text-xs font-semibold uppercase tracking-widest py-3 hover:bg-[#C49A5A] transition-colors flex items-center justify-center gap-2"
+              >
+                <User className="w-4 h-4" /> {user ? `My Account (${user.name})` : 'Client Sign In'}
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
+
