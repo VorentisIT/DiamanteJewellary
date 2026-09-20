@@ -52,25 +52,33 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     const cleanEmail = email ? email.trim().toLowerCase() : '';
 
-    // Fast check for known admin & customer credentials FIRST (instant 2ms response!)
-    if (cleanEmail === 'admin@gmail.com' && (password === 'admin123' || password === 'adminpassword123')) {
-      return res.json({
-        _id: 'mem_admin_1',
-        name: 'AURÉLIA Admin',
-        email: 'admin@gmail.com',
-        role: 'admin',
-        token: generateToken('mem_admin_1')
-      });
+    // Fast check for known admin & customer credentials with strict password verification
+    if (cleanEmail === 'admin@gmail.com') {
+      if (password === 'admin123' || password === 'adminpassword123') {
+        return res.json({
+          _id: 'mem_admin_1',
+          name: 'AURÉLIA Admin',
+          email: 'admin@gmail.com',
+          role: 'admin',
+          token: generateToken('mem_admin_1')
+        });
+      } else {
+        return res.status(401).json({ message: 'Invalid email or password' });
+      }
     }
 
-    if (cleanEmail === 'priya@example.com' && (password === 'customerpassword123' || password === 'priya123')) {
-      return res.json({
-        _id: 'mem_customer_1',
-        name: 'Priya Sharma',
-        email: 'priya@example.com',
-        role: 'customer',
-        token: generateToken('mem_customer_1')
-      });
+    if (cleanEmail === 'priya@example.com') {
+      if (password === 'customerpassword123' || password === 'priya123') {
+        return res.json({
+          _id: 'mem_customer_1',
+          name: 'Priya Sharma',
+          email: 'priya@example.com',
+          role: 'customer',
+          token: generateToken('mem_customer_1')
+        });
+      } else {
+        return res.status(401).json({ message: 'Invalid email or password' });
+      }
     }
 
     // Check MongoDB database ONLY if connection is active
@@ -87,23 +95,11 @@ export const loginUser = async (req, res) => {
           });
         }
       } catch (dbErr) {
-        console.log('DB Query skipped, using fallback authentication.');
+        console.log('DB Query skipped.');
       }
     }
 
-    // Generic fallback login for any valid email/password combination
-    if (cleanEmail.includes('@') && password && password.length >= 4) {
-      const isAdmin = cleanEmail.includes('admin');
-      return res.json({
-        _id: `mem_user_${Date.now()}`,
-        name: cleanEmail.split('@')[0].toUpperCase(),
-        email: cleanEmail,
-        role: isAdmin ? 'admin' : 'customer',
-        token: generateToken(`mem_user_${Date.now()}`)
-      });
-    }
-
-    return res.status(401).json({ message: 'Invalid email or password' });
+    return res.status(401).json({ message: 'Invalid email or password. Access denied.' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

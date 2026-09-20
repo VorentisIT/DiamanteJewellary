@@ -44,24 +44,11 @@ export default function Login() {
           navigate('/account');
         }
       } else {
-        setError(data.message || 'Authentication failed. Please check credentials.');
+        setError(data.message || 'Invalid email or password. Access denied.');
       }
     } catch (err) {
       setIsLoading(false);
-      // Fallback client side login demo
-      const fallbackUser = {
-        _id: 'user_' + Date.now(),
-        name: name || (email.includes('admin') ? 'AURÉLIA Admin' : 'Priya Sharma'),
-        email: email,
-        role: email.includes('admin') ? 'admin' : 'customer',
-        token: 'fallback_token_' + Date.now()
-      };
-      login(fallbackUser);
-      if (fallbackUser.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/account');
-      }
+      setError('Connection error or invalid credentials. Please check your details and try again.');
     }
   };
 
