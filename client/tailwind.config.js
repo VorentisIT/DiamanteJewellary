@@ -1,0 +1,45 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        forest: {
+          DEFAULT: '#102C24',
+          dark: '#0A1D18',
+          light: '#173D32'
+        },
+        ivory: {
+          DEFAULT: '#F8F5EE',
+          paper: '#F4EFEA',
+          card: '#FFFFFF'
+        },
+        champagne: {
+          DEFAULT: '#EFE7D8',
+          light: '#F5EFE3'
+        },
+        gold: {
+          DEFAULT: '#C49A5A',
+          light: '#D9BC86',
+          dark: '#A57E3F',
+          hover: '#B38E46'
+        },
+        charcoal: {
+          DEFAULT: '#202522',
+          muted: '#77736B'
+        },
+        warm: {
+          border: '#DED8CC'
+        }
+      },
+      fontFamily: {
+        serif: ['Cormorant Garamond', 'Playfair Display', 'Georgia', 'serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+      }
+    },
+  },
+  plugins: [],
+}
