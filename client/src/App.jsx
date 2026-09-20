@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ShopProvider } from './store/ShopContext';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ShopProvider, useShop } from './store/ShopContext';
 
 import Home from './pages/Home';
 import PLP from './pages/PLP';
@@ -12,6 +12,17 @@ import OrderTracking from './pages/OrderTracking';
 import Wishlist from './pages/Wishlist';
 import About from './pages/About';
 import AdminDashboard from './pages/AdminDashboard';
+
+// Protected Admin Route Guard
+function ProtectedAdminRoute({ children }) {
+  const { user } = useShop();
+
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
 
 export default function App() {
   return (
@@ -28,9 +39,17 @@ export default function App() {
           <Route path="/order-tracking/:orderId" element={<OrderTracking />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/about" element={<About />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboard />
+              </ProtectedAdminRoute>
+            }
+          />
         </Routes>
       </Router>
     </ShopProvider>
   );
 }
+

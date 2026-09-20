@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   TrendingUp,
   ShoppingBag,
@@ -14,12 +14,15 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
-  Search
+  Search,
+  LogOut
 } from 'lucide-react';
-import { formatINR } from '../store/ShopContext';
+import { formatINR, useShop } from '../store/ShopContext';
 import { seedProducts } from '../../../server/seed/seedData.js';
 
 export default function AdminDashboard() {
+  const { user, logout } = useShop();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview'); // overview | products | orders | coupons
   const [analytics, setAnalytics] = useState(null);
   const [products, setProducts] = useState([]);
@@ -137,13 +140,23 @@ export default function AdminDashboard() {
             AURÉLIA <span className="text-gold text-xs uppercase font-sans tracking-widest">ADMIN PORTAL</span>
           </Link>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-xs text-warm-gray">Logged in as: <strong className="text-gold">admin@gmail.com</strong></span>
-          <Link to="/" className="text-xs text-ivory hover:text-gold border border-charcoal-light px-3 py-1.5">
+        <div className="flex items-center gap-4 text-xs">
+          <span className="text-warm-gray">Logged in as: <strong className="text-gold">{user?.email || 'admin@gmail.com'}</strong></span>
+          <Link to="/" className="text-ivory hover:text-gold border border-charcoal-light px-3 py-1.5">
             View Live Boutique →
           </Link>
+          <button
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            className="flex items-center gap-1.5 text-warm-gray hover:text-red-400 border border-charcoal-light px-3 py-1.5"
+          >
+            <LogOut className="w-3.5 h-3.5" /> Sign Out
+          </button>
         </div>
       </header>
+
 
       <div className="flex-1 flex overflow-hidden">
         
