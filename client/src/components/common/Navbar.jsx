@@ -90,10 +90,10 @@ export default function Navbar() {
           </nav>
 
           {/* Right Action Icons */}
-          <div className="flex items-center space-x-5 text-[#202522]">
+          <div className="flex items-center space-x-3 sm:space-x-5 text-[#202522]">
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-1 hover:text-[#C49A5A] transition-colors"
+              className="hidden sm:block p-1 hover:text-[#C49A5A] transition-colors"
               aria-label="Search"
             >
               <Search className="w-5 h-5 stroke-[1.3]" />
@@ -101,7 +101,7 @@ export default function Navbar() {
 
             <Link
               to="/wishlist"
-              className="relative p-1 hover:text-[#C49A5A] transition-colors"
+              className="hidden sm:block relative p-1 hover:text-[#C49A5A] transition-colors"
               aria-label="Wishlist"
             >
               <Heart className="w-5 h-5 stroke-[1.3]" />
@@ -189,6 +189,18 @@ export default function Navbar() {
                 </button>
               </div>
 
+              {/* Search Box inside Mobile Drawer */}
+              <form onSubmit={(e) => { handleSearchSubmit(e); setIsMobileMenuOpen(false); }} className="mb-6 relative">
+                <input
+                  type="text"
+                  placeholder="Search jewellery..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 bg-white border border-[#DED8CC] text-xs text-[#202522] placeholder:text-[#77736B] focus:outline-none"
+                />
+                <Search className="w-4 h-4 text-[#C49A5A] absolute left-3 top-2.5" />
+              </form>
+
               {/* Mobile Navigation Links */}
               <nav className="space-y-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#202522]">
                 <Link
@@ -214,19 +226,26 @@ export default function Navbar() {
                 </div>
 
                 <Link
+                  to="/wishlist"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between py-2 border-b border-[#DED8CC]/60 hover:text-[#C49A5A]"
+                >
+                  <span>SAVED WISHLIST</span>
+                  {wishlist.length > 0 && (
+                    <span className="bg-[#C49A5A] text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
+                      {wishlist.length}
+                    </span>
+                  )}
+                </Link>
+
+                <Link
                   to="/jewellery?collection=The Bridal Edit"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block py-2 border-b border-[#DED8CC]/60 hover:text-[#C49A5A]"
                 >
                   COLLECTIONS
                 </Link>
-                <Link
-                  to="/jewellery?category=Gift"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-2 border-b border-[#DED8CC]/60 hover:text-[#C49A5A]"
-                >
-                  GIFTS
-                </Link>
+
                 <Link
                   to="/about"
                   onClick={() => setIsMobileMenuOpen(false)}
