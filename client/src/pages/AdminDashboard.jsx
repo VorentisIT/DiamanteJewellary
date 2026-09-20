@@ -355,7 +355,7 @@ export default function AdminDashboard() {
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         
         {/* Executive Sidebar Navigation */}
-        <aside className="w-full md:w-64 bg-[#0E1512] border-b md:border-b-0 md:border-r border-[#203830] p-4 md:p-6 flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto flex-shrink-0">
+        <aside className="w-full md:w-64 bg-[#0E1512] border-b md:border-b-0 md:border-r border-[#203830] p-4 md:p-6 flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto flex-shrink-0 h-fit self-start md:sticky md:top-0">
           
           <div className="hidden md:block pb-4 mb-2 border-b border-[#203830]">
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#C49A5A]">
@@ -365,7 +365,7 @@ export default function AdminDashboard() {
 
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 md:w-full flex items-center justify-between p-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
+            className={`w-full h-11 flex-shrink-0 flex items-center justify-between px-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
               activeTab === 'overview'
                 ? 'bg-[#C49A5A] text-[#0A1A15] shadow-lg font-bold'
                 : 'text-[#77807B] hover:text-[#F8F5EE] hover:bg-[#16241E]'
@@ -380,7 +380,7 @@ export default function AdminDashboard() {
 
           <button
             onClick={() => setActiveTab('products')}
-            className={`flex-1 md:w-full flex items-center justify-between p-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
+            className={`w-full h-11 flex-shrink-0 flex items-center justify-between px-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
               activeTab === 'products'
                 ? 'bg-[#C49A5A] text-[#0A1A15] shadow-lg font-bold'
                 : 'text-[#77807B] hover:text-[#F8F5EE] hover:bg-[#16241E]'
@@ -397,7 +397,7 @@ export default function AdminDashboard() {
 
           <button
             onClick={() => setActiveTab('orders')}
-            className={`flex-1 md:w-full flex items-center justify-between p-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
+            className={`w-full h-11 flex-shrink-0 flex items-center justify-between px-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
               activeTab === 'orders'
                 ? 'bg-[#C49A5A] text-[#0A1A15] shadow-lg font-bold'
                 : 'text-[#77807B] hover:text-[#F8F5EE] hover:bg-[#16241E]'
@@ -414,7 +414,7 @@ export default function AdminDashboard() {
 
           <button
             onClick={() => setActiveTab('coupons')}
-            className={`flex-1 md:w-full flex items-center justify-between p-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
+            className={`w-full h-11 flex-shrink-0 flex items-center justify-between px-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
               activeTab === 'coupons'
                 ? 'bg-[#C49A5A] text-[#0A1A15] shadow-lg font-bold'
                 : 'text-[#77807B] hover:text-[#F8F5EE] hover:bg-[#16241E]'
@@ -431,7 +431,7 @@ export default function AdminDashboard() {
 
           <button
             onClick={() => setActiveTab('customers')}
-            className={`flex-1 md:w-full flex items-center justify-between p-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
+            className={`w-full h-11 flex-shrink-0 flex items-center justify-between px-3 text-xs font-semibold uppercase tracking-widest text-left rounded-sm transition-all whitespace-nowrap ${
               activeTab === 'customers'
                 ? 'bg-[#C49A5A] text-[#0A1A15] shadow-lg font-bold'
                 : 'text-[#77807B] hover:text-[#F8F5EE] hover:bg-[#16241E]'

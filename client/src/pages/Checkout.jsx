@@ -211,7 +211,7 @@ export default function Checkout() {
 
               {step === 1 ? (
                 /* Step 1: Shipping Address */
-                <form onSubmit={() => setStep(2)} className="space-y-4">
+                <form onSubmit={handlePlaceOrder} className="space-y-4">
                   <h3 className="font-serif text-xl font-bold text-charcoal">Delivery Address</h3>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -287,11 +287,17 @@ export default function Checkout() {
                     </div>
                   </div>
 
+                  <div className="bg-amber-50/80 border border-amber-200/80 p-3 rounded text-[11px] text-amber-900 mt-4 flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-amber-700 flex-shrink-0" />
+                    <span>Direct Order Placement: Payment gateway code will be integrated in future. Orders place directly and show on Admin Panel.</span>
+                  </div>
+
                   <button
                     type="submit"
-                    className="w-full bg-charcoal text-ivory text-xs font-semibold uppercase tracking-widest py-4 hover:bg-gold transition-colors flex items-center justify-center gap-2 mt-6"
+                    disabled={isProcessing}
+                    className="w-full bg-charcoal text-ivory text-xs font-semibold uppercase tracking-widest py-4 hover:bg-gold transition-colors flex items-center justify-center gap-2 mt-4 disabled:opacity-50 cursor-pointer"
                   >
-                    Continue to Payment <ArrowRight className="w-4 h-4" />
+                    {isProcessing ? 'Processing Order...' : 'Place Order & Send to Admin Panel →'}
                   </button>
                 </form>
               ) : (
