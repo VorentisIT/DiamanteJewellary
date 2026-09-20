@@ -39,14 +39,19 @@ export default function PLP() {
     if (maxPrice) url += `maxPrice=${maxPrice}&`;
     if (sortOption) url += `sort=${sortOption}&`;
 
+    const localProds = JSON.parse(localStorage.getItem('aurelia_local_products') || '[]');
+    const baseProds = [...localProds, ...seedProducts.map((p, i) => ({ ...p, _id: `mem_prod_${i + 1}` }))];
+    const uniqueBase = baseProds.filter((v, i, a) => a.findIndex(t => (t.sku === v.sku || t._id === v._id)) === i);
+
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setProducts(data);
+          const merged = [...data, ...localProds];
+          const uniqueMerged = merged.filter((v, i, a) => a.findIndex(t => (t.sku === v.sku || t._id === v._id)) === i);
+          setProducts(uniqueMerged);
         } else {
-          // Fallback filter over seedProducts
-          let filtered = [...seedProducts].map((p, i) => ({ ...p, _id: `mem_prod_${i + 1}` }));
+          let filtered = [...uniqueBase];
           if (activeCategory) filtered = filtered.filter(p => p.category.toLowerCase() === activeCategory.toLowerCase());
           if (selectedMetal) filtered = filtered.filter(p => p.metal === selectedMetal);
           if (selectedStone) filtered = filtered.filter(p => p.stone === selectedStone);
@@ -57,12 +62,13 @@ export default function PLP() {
         }
       })
       .catch(() => {
-        let filtered = [...seedProducts].map((p, i) => ({ ...p, _id: `mem_prod_${i + 1}` }));
+        let filtered = [...uniqueBase];
         if (activeCategory) filtered = filtered.filter(p => p.category.toLowerCase() === activeCategory.toLowerCase());
         if (selectedMetal) filtered = filtered.filter(p => p.metal === selectedMetal);
         setProducts(filtered);
       });
   }, [activeCategory, selectedMetal, selectedStone, selectedCollection, searchQuery, minPrice, maxPrice, sortOption]);
+
 
   const updateFilter = (key, value) => {
     const newParams = new URLSearchParams(searchParams);

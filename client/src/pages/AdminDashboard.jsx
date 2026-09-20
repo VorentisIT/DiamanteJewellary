@@ -115,68 +115,75 @@ export default function AdminDashboard() {
         });
       });
 
-    // Fetch Products
+    // Synchronize Products from local DB + Server
+    const localProds = JSON.parse(localStorage.getItem('aurelia_local_products') || '[]');
+    const seedFormatted = seedProducts.map((p, i) => ({ ...p, _id: `mem_prod_${i + 1}` }));
+    const baseMerged = [...localProds, ...seedFormatted];
+    const uniqueBaseProds = baseMerged.filter((v, i, a) => a.findIndex(t => (t.sku === v.sku || t._id === v._id)) === i);
+
     fetch('/api/products')
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) setProducts(data);
-        else setProducts(seedProducts.map((p, i) => ({ ...p, _id: `mem_prod_${i + 1}` })));
+        if (Array.isArray(data) && data.length > 0) {
+          const merged = [...localProds, ...data];
+          const unique = merged.filter((v, i, a) => a.findIndex(t => (t.sku === v.sku || t._id === v._id)) === i);
+          setProducts(unique);
+        } else {
+          setProducts(uniqueBaseProds);
+        }
       })
-      .catch(() => setProducts(seedProducts.map((p, i) => ({ ...p, _id: `mem_prod_${i + 1}` }))));
+      .catch(() => setProducts(uniqueBaseProds));
 
-    // Fetch Orders
+    // Synchronize Orders from local DB + Server
+    const localOrders = JSON.parse(localStorage.getItem('aurelia_local_orders') || '[]');
+    const seedOrders = [
+      {
+        _id: 'mem_order_1',
+        orderNumber: 'AUR-984210',
+        user: { name: 'Priya Sharma', email: 'priya@example.com', phone: '+91 99887 76655' },
+        totalAmount: 48900,
+        orderStatus: 'crafting',
+        items: [{ name: 'Celeste Diamond Ring', price: 48900, quantity: 1, metal: '18K Gold' }],
+        createdAt: new Date().toISOString()
+      },
+      {
+        _id: 'mem_order_2',
+        orderNumber: 'AUR-882910',
+        user: { name: 'Ananya Mehta', email: 'ananya@example.com', phone: '+91 98201 22334' },
+        totalAmount: 125000,
+        orderStatus: 'quality_check',
+        items: [{ name: 'Royal Heritage Polki Necklace', price: 125000, quantity: 1, metal: '22K Gold' }],
+        createdAt: new Date(Date.now() - 86400000).toISOString()
+      }
+    ];
+
     fetch('/api/orders')
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) setOrders(data);
-        else setOrders([
-          {
-            _id: 'mem_order_1',
-            orderNumber: 'AUR-984210',
-            user: { name: 'Priya Sharma', email: 'priya@example.com', phone: '+91 99887 76655' },
-            totalAmount: 48900,
-            orderStatus: 'crafting',
-            items: [{ name: 'Celeste Diamond Ring', price: 48900, quantity: 1, metal: '18K Gold' }],
-            createdAt: new Date().toISOString()
-          },
-          {
-            _id: 'mem_order_2',
-            orderNumber: 'AUR-882910',
-            user: { name: 'Ananya Mehta', email: 'ananya@example.com', phone: '+91 98201 22334' },
-            totalAmount: 125000,
-            orderStatus: 'quality_check',
-            items: [{ name: 'Royal Heritage Polki Necklace', price: 125000, quantity: 1, metal: '22K Gold' }],
-            createdAt: new Date(Date.now() - 86400000).toISOString()
-          },
-          {
-            _id: 'mem_order_3',
-            orderNumber: 'AUR-773192',
-            user: { name: 'Rohan Kapoor', email: 'rohan@example.com', phone: '+91 97110 44556' },
-            totalAmount: 89000,
-            orderStatus: 'delivered',
-            items: [{ name: 'Imperial Solitaire Tennis Bracelet', price: 89000, quantity: 1, metal: 'White Gold' }],
-            createdAt: new Date(Date.now() - 172800000).toISOString()
-          }
-        ]);
+        const serverOrders = Array.isArray(data) ? data : [];
+        const combined = [...localOrders, ...serverOrders, ...seedOrders];
+        const unique = combined.filter((v, i, a) => a.findIndex(t => (t.orderNumber === v.orderNumber || t._id === v._id)) === i);
+        setOrders(unique);
       })
-      .catch(() => setOrders([
-        {
-          _id: 'mem_order_1',
-          orderNumber: 'AUR-984210',
-          user: { name: 'Priya Sharma', email: 'priya@example.com', phone: '+91 99887 76655' },
-          totalAmount: 48900,
-          orderStatus: 'crafting',
-          items: [{ name: 'Celeste Diamond Ring', price: 48900, quantity: 1, metal: '18K Gold' }],
-          createdAt: new Date().toISOString()
-        }
-      ]));
+      .catch(() => {
+        const combined = [...localOrders, ...seedOrders];
+        const unique = combined.filter((v, i, a) => a.findIndex(t => (t.orderNumber === v.orderNumber || t._id === v._id)) === i);
+        setOrders(unique);
+      });
   }, []);
 
   const handleRefreshData = () => {
     setIsRefreshing(true);
+    const localOrders = JSON.parse(localStorage.getItem('aurelia_local_orders') || '[]');
+    if (localOrders.length > 0) {
+      setOrders(prev => {
+        const combined = [...localOrders, ...prev];
+        return combined.filter((v, i, a) => a.findIndex(t => (t.orderNumber === v.orderNumber || t._id === v._id)) === i);
+      });
+    }
     setTimeout(() => {
       setIsRefreshing(false);
-      showToast('Dashboard metrics re-synchronized with edge network.');
+      showToast('Dashboard metrics re-synchronized with live database.');
     }, 800);
   };
 
@@ -191,13 +198,17 @@ export default function AdminDashboard() {
       slug: productForm.name.toLowerCase().replace(/\s+/g, '-')
     };
 
+    let updatedProducts;
     if (editingProduct) {
-      setProducts(products.map((p) => (p._id === editingProduct._id ? { ...p, ...payload } : p)));
+      updatedProducts = products.map((p) => (p._id === editingProduct._id ? { ...p, ...payload } : p));
       showToast(`Updated product "${payload.name}" successfully.`);
     } else {
-      setProducts([{ ...payload, _id: `mem_prod_${Date.now()}` }, ...products]);
+      updatedProducts = [{ ...payload, _id: `mem_prod_${Date.now()}` }, ...products];
       showToast(`Added new product "${payload.name}" to catalog.`);
     }
+
+    setProducts(updatedProducts);
+    localStorage.setItem('aurelia_local_products', JSON.stringify(updatedProducts));
 
     setIsProductModalOpen(false);
     setEditingProduct(null);

@@ -65,16 +65,65 @@ export default function Checkout() {
       });
       const data = await res.json();
 
+      const newOrder = {
+        _id: data._id || `ord_${Date.now()}`,
+        orderNumber: data.orderNumber || `AUR-${Math.floor(100000 + Math.random() * 900000)}`,
+        trackingNumber: data.trackingNumber || `AUR-EX-${Math.floor(100000 + Math.random() * 900000)}`,
+        user: {
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone
+        },
+        totalAmount: cartTotal,
+        orderStatus: 'pending',
+        items: cart.map((item) => ({
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          selectedMetal: item.selectedMetal,
+          image: item.product.images[0]
+        })),
+        createdAt: new Date().toISOString()
+      };
+
+      // Save order into localStorage for live Admin Dashboard sync
+      const existingOrders = JSON.parse(localStorage.getItem('aurelia_local_orders') || '[]');
+      localStorage.setItem('aurelia_local_orders', JSON.stringify([newOrder, ...existingOrders]));
+
       setTimeout(() => {
         setIsProcessing(false);
-        setPlacedOrder(data._id ? data : { ...orderPayload, orderNumber: 'AUR-984210', trackingNumber: 'AUR-EX-887412' });
+        setPlacedOrder(newOrder);
         clearCart();
         setStep(3);
       }, 1500);
     } catch (err) {
+      const newOrder = {
+        _id: `ord_${Date.now()}`,
+        orderNumber: `AUR-${Math.floor(100000 + Math.random() * 900000)}`,
+        trackingNumber: `AUR-EX-${Math.floor(100000 + Math.random() * 900000)}`,
+        user: {
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone
+        },
+        totalAmount: cartTotal,
+        orderStatus: 'pending',
+        items: cart.map((item) => ({
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          selectedMetal: item.selectedMetal,
+          image: item.product.images[0]
+        })),
+        createdAt: new Date().toISOString()
+      };
+
+      const existingOrders = JSON.parse(localStorage.getItem('aurelia_local_orders') || '[]');
+      localStorage.setItem('aurelia_local_orders', JSON.stringify([newOrder, ...existingOrders]));
+
       setTimeout(() => {
         setIsProcessing(false);
-        setPlacedOrder({ ...orderPayload, orderNumber: 'AUR-984210', trackingNumber: 'AUR-EX-887412' });
+        setPlacedOrder(newOrder);
         clearCart();
         setStep(3);
       }, 1500);
